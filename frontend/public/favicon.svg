@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- House silhouette -->
+  <path d="M16 4L3 14.5V29H12V21H20V29H29V14.5L16 4Z" fill="#2D2926"/>
+  <!-- Z letterform integrated -->
+  <path d="M10 17H22M10 17L19 23H10M22 17L13 23H22" stroke="#B68B5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

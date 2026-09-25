@@ -1,0 +1,290 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-09-15T15:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_sedi_electro",
+      "_type": "workspace",
+      "name": "SEDI Electro API",
+      "description": "Authentication API — Laravel Sanctum",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_sedi_electro",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://127.0.0.1:8000/api",
+        "token": ""
+      },
+      "color": null,
+      "isPrivate": false
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_sedi_electro",
+      "name": "Auth",
+      "description": "Endpoints d'authentification SEDI Electro",
+      "environment": {},
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "1. Register",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"password\": \"Secret99!\",\n  \"password_confirmation\": \"Secret99!\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Créer un nouveau compte. Un code de vérification à 6 chiffres sera envoyé par email (dans les logs en dev).",
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_verify_email",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "2. Verify Email",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/verify-email",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"verification_code\": \"XXXXXX\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Soumettre le code à 6 chiffres reçu par email. Remplace XXXXXX par le code trouvé dans storage/logs/laravel.log",
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_resend",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "3. Resend Verification Code",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/resend-verification",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Renvoyer un nouveau code de vérification. Limité à 3 tentatives par minute.",
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "4. Login",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"password\": \"Secret99!\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Connexion après vérification email. Copie le token de la réponse et colle-le dans l'environnement (variable 'token').",
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_profile_get",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "5. Get Profile",
+      "method": "GET",
+      "url": "{{ base_url }}/auth/profile",
+      "body": { "mimeType": "application/json" },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ token }}" }
+      ],
+      "description": "Récupérer le profil de l'utilisateur connecté. Nécessite le Bearer token.",
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_profile_put",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "6. Update Profile (PUT)",
+      "method": "PUT",
+      "url": "{{ base_url }}/auth/profile",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"johndoe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ token }}" }
+      ],
+      "description": "Mise à jour complète du profil. Tous les champs sont optionnels.",
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_profile_patch",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "7. Update Profile (PATCH)",
+      "method": "PATCH",
+      "url": "{{ base_url }}/auth/profile",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"first_name\": \"Jean\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ token }}" }
+      ],
+      "description": "Mise à jour partielle du profil. Envoie seulement les champs à modifier.",
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "8. Logout",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/logout",
+      "body": { "mimeType": "application/json", "text": "" },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ token }}" }
+      ],
+      "description": "Déconnexion — révoque le token actuel.",
+      "metaSortKey": -100
+    },
+    {
+      "_id": "fld_errors",
+      "_type": "request_group",
+      "parentId": "wrk_sedi_electro",
+      "name": "Cas d'erreurs",
+      "description": "Requêtes pour tester les cas d'échec",
+      "environment": {},
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_err_duplicate",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Register — Email deja utilise (422)",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"password\": \"Secret99!\",\n  \"password_confirmation\": \"Secret99!\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Doit retourner 422 avec errors.email : already exists",
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_err_validation",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Register — Donnees invalides (422)",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"pas-un-email\",\n  \"password\": \"123\",\n  \"password_confirmation\": \"different\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Doit retourner 422 avec erreurs sur email et password",
+      "metaSortKey": -380
+    },
+    {
+      "_id": "req_err_bad_code",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Verify Email — Mauvais code (422)",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/verify-email",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"verification_code\": \"000000\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Code intentionnellement faux — doit retourner 422",
+      "metaSortKey": -360
+    },
+    {
+      "_id": "req_err_bad_creds",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Login — Mauvais mot de passe (401)",
+      "method": "POST",
+      "url": "{{ base_url }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"test@sedi-electro.com\",\n  \"password\": \"MauvaisMotDePasse!\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Doit retourner 401 : The provided credentials are incorrect.",
+      "metaSortKey": -340
+    },
+    {
+      "_id": "req_err_no_token",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Profile — Sans token (401)",
+      "method": "GET",
+      "url": "{{ base_url }}/auth/profile",
+      "body": { "mimeType": "application/json" },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" }
+      ],
+      "description": "Accès au profil sans Authorization header — doit retourner 401",
+      "metaSortKey": -320
+    },
+    {
+      "_id": "req_err_bad_token",
+      "_type": "request",
+      "parentId": "fld_errors",
+      "name": "Profile — Token invalide (401)",
+      "method": "GET",
+      "url": "{{ base_url }}/auth/profile",
+      "body": { "mimeType": "application/json" },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer tokenbidoninvalide123" }
+      ],
+      "description": "Token invalide — doit retourner 401 Unauthenticated",
+      "metaSortKey": -300
+    }
+  ]
+}
